@@ -98,9 +98,12 @@ When building a Agentflow in the Flowise UI, use these settings to connect the n
 * Ollama Base URL: http://ollama:11434
 (Note: Do not use localhost here; the containers communicate via the internal Docker network name ollama.)
 * Postgres Details:
-**User**: flowise_user
-**Password**: flowise_password
-**DataBase**: flowise_db
+
+    **User**: flowise_user
+
+    **Password**: flowise_password
+
+    **DataBase**: flowise_db
 
 ### Maintenance
 * Stop the services (keep the data)
