@@ -1,0 +1,44 @@
+services:
+  # Database for Flowise to store chats and workflows
+  db:
+    image: postgres:15-alpine
+    container_name: flowise-db
+    environment:
+      POSTGRES_USER: flowise_user
+      POSTGRES_PASSWORD: flowise_password
+      POSTGRES_DB: flowise_db
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  # Ollama for running local LLMs (Llama 3, Mistral, etc.)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ./ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: always
+
+  # Flowise - The main UI
+  flowise:
+    image: flowiseai/flowise:latest
+    container_name: flowise
+    restart: always
+    environment:
+      - DATABASE_TYPE=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=flowise_user
+      - DATABASE_PASSWORD=flowise_password
+      - DATABASE_NAME=flowise_db
+      - FLOWISE_USERNAME=admin@flowise.local
+      - FLOWISE_PASSWORD=password123
+      - FLOWISE_SECRETKEY_OVERWRITE=ae924c7f12c8427eac40485a0890f5a5
+      - SESSION_SECRET=6e32d56a31f7422f98d7f2e1a3b4c5d6
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - ollama
